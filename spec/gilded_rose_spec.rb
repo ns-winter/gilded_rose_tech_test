@@ -4,7 +4,7 @@ require 'item'
 describe GildedRose do
 
   describe "#update_quality" do
-    context "Standard Item" do
+    context "Standard Items" do
       before :all do
         items = [
           Item.new("+5 Dexterity Vest", 10, 20),
@@ -32,7 +32,7 @@ describe GildedRose do
       end
     end
 
-    context "Aged Brie" do
+    context "Appreciating Items (increase in value over time)" do
       before :all do
         items = [
           Item.new("Aged Brie", 2, 0),
@@ -89,6 +89,26 @@ describe GildedRose do
       it "quality doesn't exceed 50" do
         expect(@gilded_rose.items[0].quality).to eq 50
       end
+    end
+
+    context "Legendary Items" do
+      before :all do
+        items = [
+          Item.new(name="Sulfuras, Hand of Ragnaros", sell_in=0, quality=80),
+          Item.new(name="Sulfuras, Hand of Ragnaros", sell_in=-1, quality=80)
+        ]
+        @gilded_rose = GildedRose.new(items)
+        @gilded_rose.update_quality
+      end
+
+      it "value stays the same" do
+        expect(@gilded_rose.items[0].quality).to eq 80
+      end
+
+      it "sell_in attribute stays the same" do
+        expect(@gilded_rose.items[0].sell_in).to eq 0
+      end
+
     end
   end
 end
